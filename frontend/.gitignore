@@ -1,0 +1,5 @@
+.vercel
+.env*
+
+# Keep the committed template.
+!.env.example

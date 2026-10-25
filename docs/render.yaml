@@ -1,3 +1,6 @@
+# Fallback API host. Kept under docs/ rather than the repo root: a root-level
+# render.yaml makes the Vercel CLI parse the project as a multi-service
+# monorepo and refuse the deploy. To use it, copy this to the repo root.
 # Fallback host for the API, used only if the Vercel Python function is not
 # viable. The frontend still deploys to Vercel; point its VITE_API_BASE_URL at
 # the URL this service gets.

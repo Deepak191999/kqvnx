@@ -29,3 +29,10 @@ backend/data/raw/
 
 # Local credentials for deployment. Never commit.
 .secrets.env
+
+.vercel
+.env*
+
+# Keep the committed templates (the rule above would otherwise hide them).
+!.env.example
+!**/.env.example

@@ -131,25 +131,39 @@ cd backend && python -m app.services.ingest
 
 ## Deployment
 
-Live application: **_(add deployed URL here)_**
+| | URL |
+|---|---|
+| **Application** | <https://kqvnx.vercel.app> |
+| **API** | <https://kqvnx-api.vercel.app> |
+| API docs (OpenAPI) | <https://kqvnx-api.vercel.app/docs> |
 
-Both halves ship to **a single Vercel project**. The SPA is the static build; the API runs
-as a Python serverless function at `api/index.py`, which puts `backend/` on the import path
-and exports the same FastAPI app. Because Vercel forwards the original request path to an
-ASGI app, the routers keep their `/api` prefix and nothing is rewritten server-side. The
-root `requirements.txt` is deliberately narrower than `backend/requirements.txt` — uvicorn
-and httpx are not needed in the function — to stay inside the bundle size limit.
+Both halves run on Vercel as two projects, each with an unambiguous root directory.
 
-The deployment bundle is mounted read-only, so `READ_ONLY_DB=1` makes SQLite open the
-snapshot in read-only URI mode rather than trying to create a journal beside it.
+- **`kqvnx`** — root `frontend/`, the static Vite build. `VITE_API_BASE_URL` is baked in at
+  build time.
+- **`kqvnx-api`** — repo root, the FastAPI app as a Python serverless function at
+  `api/index.py`, which puts `backend/` on the import path and exports the same app.
 
-Fallbacks, if the Python function is not viable on your plan:
+Two things are worth knowing if you redeploy:
+
+- **No `rewrites`.** Vercel routes every unmatched path to the function already, preserving
+  the original path. Adding a rewrite to `/api/index` makes the function receive the literal
+  path `/api/index`, and every route 404s.
+- **The bundle is read-only.** `api/index.py` sets `READ_ONLY_DB=1`, which opens the SQLite
+  snapshot in read-only URI mode instead of trying to create a journal beside it.
+
+The root `requirements.txt` is deliberately narrower than `backend/requirements.txt` —
+uvicorn and httpx are not needed in the function — to stay inside the bundle size limit.
+
+Fallbacks, if the Python function is not viable on another plan:
 
 | Component | Platform | Config |
 |---|---|---|
-| Frontend | Vercel | `frontend/vercel.json`; set `VITE_API_BASE_URL` to the API origin |
-| Backend | Render | `render.yaml` (Docker, free tier) |
+| Backend | Render | `docs/render.yaml` (Docker, free tier) — copy to the repo root to use |
 | Backend | Heroku | `backend/heroku.yml` container build, or `Procfile` |
+
+> `render.yaml` is kept under `docs/` rather than the repo root because the Vercel CLI
+> parses a root-level one as a multi-service monorepo manifest and refuses to deploy.
 
 The API permits any `*.vercel.app` origin by regex plus whatever is listed in
 `ALLOWED_ORIGINS`, so preview deployments and a split deployment both work without
@@ -165,7 +179,7 @@ Step-by-step deployment instructions are in [`docs/DEPLOYMENT.md`](docs/DEPLOYME
 .
 ├── vercel.json                 Single-project deploy: SPA + Python function
 ├── requirements.txt            Trimmed dependency set for the function only
-├── render.yaml                 Fallback API host (Docker, free tier)
+├── docs/render.yaml            Fallback API host (Docker, free tier)
 ├── docker-compose.yml          API + nginx-served frontend
 ├── .github/workflows/ci.yml    Backend tests, frontend typecheck and build
 ├── api/
