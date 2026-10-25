@@ -1,0 +1,106 @@
+/* Design tokens.
+ *
+ * Series colours come from a validated categorical palette: slot 1 blue for the
+ * published forecast, slot 2 orange for the calibrated forecast, slot 3 aqua for
+ * metered outturn. Dark values are stepped for the dark surface rather than
+ * flipped, and both the OS setting and the in-app toggle resolve to them.
+ */
+
+:root {
+  color-scheme: light;
+
+  --surface-0: #f4f4f1;
+  --surface-1: #fcfcfb;
+  --surface-2: #efefeb;
+  --border: #dedcd4;
+  --border-strong: #c3c2b7;
+
+  --text-primary: #0b0b0b;
+  --text-secondary: #52514e;
+  --text-muted: #77766f;
+
+  --series-forecast: #2a78d6;
+  --series-calibrated: #eb6834;
+  --series-actual: #1baf7a;
+  --band-fill: rgba(42, 120, 214, 0.13);
+
+  --status-good: #008300;
+  --status-warning: #eda100;
+  --status-critical: #e34948;
+
+  --grid: #e6e5df;
+
+  --radius: 10px;
+  --shadow: 0 1px 2px rgba(11, 11, 11, 0.05), 0 4px 16px rgba(11, 11, 11, 0.04);
+
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme="light"])) {
+    color-scheme: dark;
+
+    --surface-0: #121211;
+    --surface-1: #1a1a19;
+    --surface-2: #232322;
+    --border: #35342f;
+    --border-strong: #4a4943;
+
+    --text-primary: #f0efec;
+    --text-secondary: #c3c2b7;
+    --text-muted: #93928a;
+
+    --series-forecast: #3987e5;
+    --series-calibrated: #d95926;
+    --series-actual: #199e70;
+    --band-fill: rgba(57, 135, 229, 0.18);
+
+    --status-good: #4caf50;
+    --status-warning: #c98500;
+    --status-critical: #e66767;
+
+    --grid: #2b2b29;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 4px 16px rgba(0, 0, 0, 0.3);
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --surface-0: #121211;
+  --surface-1: #1a1a19;
+  --surface-2: #232322;
+  --border: #35342f;
+  --border-strong: #4a4943;
+
+  --text-primary: #f0efec;
+  --text-secondary: #c3c2b7;
+  --text-muted: #93928a;
+
+  --series-forecast: #3987e5;
+  --series-calibrated: #d95926;
+  --series-actual: #199e70;
+  --band-fill: rgba(57, 135, 229, 0.18);
+
+  --status-good: #4caf50;
+  --status-warning: #c98500;
+  --status-critical: #e66767;
+
+  --grid: #2b2b29;
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--surface-0);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 { margin: 0; font-weight: 600; letter-spacing: -0.01em; }
