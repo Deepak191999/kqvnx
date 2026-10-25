@@ -17,11 +17,16 @@ from app.routers import accuracy, decision
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s %(message)s")
 
+
 @asynccontextmanager
 async def lifespan(_: FastAPI):
-    init_db()
-    if not DB_PATH.exists():
+    # The shipped snapshot already has its schema; only create one when the
+    # database is genuinely absent, so a read-only host is never written to.
+    if DB_PATH.exists():
+        logging.info("Serving snapshot %s", DB_PATH)
+    else:
         logging.warning("Database %s is missing; run python -m app.services.ingest", DB_PATH)
+        init_db()
     yield
 
 

@@ -1,0 +1,16 @@
+# Fallback host for the API, used only if the Vercel Python function is not
+# viable. The frontend still deploys to Vercel; point its VITE_API_BASE_URL at
+# the URL this service gets.
+services:
+  - type: web
+    name: wind-procurement-api
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: READ_ONLY_DB
+        value: "0"
+      - key: ALLOWED_ORIGINS
+        value: "http://localhost:5173,http://localhost:8080"

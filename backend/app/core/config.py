@@ -50,3 +50,7 @@ FORECAST_PUBLISH_TO = date(2026, 2, 1)
 # Actuals only need to span the delivery window itself.
 ACTUALS_DATE_FROM = date(2026, 1, 1)
 ACTUALS_DATE_TO = date(2026, 2, 1)
+
+# Set on read-only hosts (Vercel and other serverless bundles) so the snapshot
+# is opened without SQLite attempting to create a journal beside it.
+READ_ONLY_DB = os.getenv("READ_ONLY_DB", "").lower() in {"1", "true", "yes"}

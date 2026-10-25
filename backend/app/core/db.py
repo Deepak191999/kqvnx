@@ -36,8 +36,18 @@ def connect() -> sqlite3.Connection:
     # Resolved through the module rather than imported by value so that tests
     # can repoint DB_PATH at a temporary fixture database.
     db_path = config.DB_PATH
-    db_path.parent.mkdir(parents=True, exist_ok=True)
-    conn = sqlite3.connect(db_path, check_same_thread=False)
+
+    # Serverless platforms mount the deployment bundle read-only. Opening the
+    # snapshot in SQLite's read-only URI mode avoids the journal file that a
+    # normal open would try to create next to it.
+    if config.READ_ONLY_DB and db_path.exists():
+        conn = sqlite3.connect(
+            f"file:{db_path.as_posix()}?mode=ro", uri=True, check_same_thread=False
+        )
+    else:
+        db_path.parent.mkdir(parents=True, exist_ok=True)
+        conn = sqlite3.connect(db_path, check_same_thread=False)
+
     conn.row_factory = sqlite3.Row
     return conn
 
