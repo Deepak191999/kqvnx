@@ -26,3 +26,6 @@ backend/data/raw/
 # The assignment brief itself is not part of the submission and would
 # de-anonymise the repo.
 *.docx
+
+# Local credentials for deployment. Never commit.
+.secrets.env
