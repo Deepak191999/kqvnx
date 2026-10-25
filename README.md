@@ -131,15 +131,31 @@ cd backend && python -m app.services.ingest
 
 ## Deployment
 
-| Component | Platform | Notes |
-|---|---|---|
-| Frontend | Vercel | Static Vite build; set `VITE_API_BASE_URL` to the API origin |
-| Backend | Heroku (container or `Procfile`) | Binds `$PORT`; SQLite snapshot baked into the image |
-
 Live application: **_(add deployed URL here)_**
 
+Both halves ship to **a single Vercel project**. The SPA is the static build; the API runs
+as a Python serverless function at `api/index.py`, which puts `backend/` on the import path
+and exports the same FastAPI app. Because Vercel forwards the original request path to an
+ASGI app, the routers keep their `/api` prefix and nothing is rewritten server-side. The
+root `requirements.txt` is deliberately narrower than `backend/requirements.txt` — uvicorn
+and httpx are not needed in the function — to stay inside the bundle size limit.
+
+The deployment bundle is mounted read-only, so `READ_ONLY_DB=1` makes SQLite open the
+snapshot in read-only URI mode rather than trying to create a journal beside it.
+
+Fallbacks, if the Python function is not viable on your plan:
+
+| Component | Platform | Config |
+|---|---|---|
+| Frontend | Vercel | `frontend/vercel.json`; set `VITE_API_BASE_URL` to the API origin |
+| Backend | Render | `render.yaml` (Docker, free tier) |
+| Backend | Heroku | `backend/heroku.yml` container build, or `Procfile` |
+
 The API permits any `*.vercel.app` origin by regex plus whatever is listed in
-`ALLOWED_ORIGINS`, so preview deployments work without reconfiguration.
+`ALLOWED_ORIGINS`, so preview deployments and a split deployment both work without
+reconfiguration.
+
+Step-by-step deployment instructions are in [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md).
 
 ---
 
@@ -147,7 +163,16 @@ The API permits any `*.vercel.app` origin by regex plus whatever is listed in
 
 ```
 .
+├── vercel.json                 Single-project deploy: SPA + Python function
+├── requirements.txt            Trimmed dependency set for the function only
+├── render.yaml                 Fallback API host (Docker, free tier)
 ├── docker-compose.yml          API + nginx-served frontend
+├── .github/workflows/ci.yml    Backend tests, frontend typecheck and build
+├── api/
+│   └── index.py                Vercel serverless entrypoint for the FastAPI app
+├── docs/
+│   ├── DEPLOYMENT.md           Step-by-step hosting and submission guide
+│   └── VIDEO_SCRIPT.md         Timed two-part script for the demo video
 ├── backend/
 │   ├── Dockerfile              Python 3.12 slim, non-root, snapshot baked in
 │   ├── Procfile, runtime.txt   Heroku deployment
