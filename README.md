@@ -169,7 +169,8 @@ The API permits any `*.vercel.app` origin by regex plus whatever is listed in
 `ALLOWED_ORIGINS`, so preview deployments and a split deployment both work without
 reconfiguration.
 
-Step-by-step deployment instructions are in [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md).
+A full product and code walkthrough is in [`docs/WALKTHROUGH.md`](docs/WALKTHROUGH.md);
+step-by-step deployment and submission steps are in [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md).
 
 ---
 
@@ -185,6 +186,7 @@ Step-by-step deployment instructions are in [`docs/DEPLOYMENT.md`](docs/DEPLOYME
 ├── api/
 │   └── index.py                Vercel serverless entrypoint for the FastAPI app
 ├── docs/
+│   ├── WALKTHROUGH.md          Product and code walkthrough
 │   ├── DEPLOYMENT.md           Step-by-step hosting and submission guide
 │   └── VIDEO_SCRIPT.md         Timed two-part script for the demo video
 ├── backend/
