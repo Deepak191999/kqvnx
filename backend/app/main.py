@@ -52,6 +52,37 @@ app.include_router(decision.router)
 app.include_router(accuracy.router)
 
 
+@app.get("/", tags=["ops"])
+def root() -> dict:
+    """Signpost for anyone who opens the API origin directly in a browser.
+
+    Without this the root path returns a bare 404, which looks like a broken
+    deployment rather than an API with no page at /.
+    """
+    return {
+        "service": "Wind Procurement Desk API",
+        "description": (
+            "Day-ahead wind forecasts and quantified forecast error for a UK "
+            "power procurement desk. There is no web page here -- this origin "
+            "serves JSON only."
+        ),
+        "application": "https://kqvnx.vercel.app",
+        "interactive_docs": "/docs",
+        "endpoints": [
+            "/health",
+            "/api/meta",
+            "/api/decision/{delivery_date}",
+            "/api/vintages/{delivery_date}",
+            "/api/accuracy/summary",
+            "/api/accuracy/by-day",
+            "/api/accuracy/by-hour",
+            "/api/accuracy/by-horizon",
+            "/api/accuracy/distribution",
+            "/api/accuracy/series",
+        ],
+    }
+
+
 @app.get("/health", tags=["ops"])
 def health() -> dict:
     return {"status": "ok", "database": DB_PATH.name, "present": DB_PATH.exists()}
