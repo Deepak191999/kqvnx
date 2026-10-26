@@ -36,3 +36,8 @@ backend/data/raw/
 # Keep the committed templates (the rule above would otherwise hide them).
 !.env.example
 !**/.env.example
+
+# Local working notes, not part of the delivered codebase.
+docs/VIDEO_SCRIPT.md
+docs/DEPLOYMENT.md
+docs/WALKTHROUGH.md
