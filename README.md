@@ -169,8 +169,6 @@ The API permits any `*.vercel.app` origin by regex plus whatever is listed in
 `ALLOWED_ORIGINS`, so preview deployments and a split deployment both work without
 reconfiguration.
 
-A full product and code walkthrough is in [`docs/WALKTHROUGH.md`](docs/WALKTHROUGH.md);
-step-by-step deployment and submission steps are in [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md).
 
 ---
 
@@ -178,17 +176,13 @@ step-by-step deployment and submission steps are in [`docs/DEPLOYMENT.md`](docs/
 
 ```
 .
-├── vercel.json                 Single-project deploy: SPA + Python function
+├── vercel.json                 Vercel config for the API serverless function
 ├── requirements.txt            Trimmed dependency set for the function only
 ├── docs/render.yaml            Fallback API host (Docker, free tier)
 ├── docker-compose.yml          API + nginx-served frontend
 ├── .github/workflows/ci.yml    Backend tests, frontend typecheck and build
 ├── api/
 │   └── index.py                Vercel serverless entrypoint for the FastAPI app
-├── docs/
-│   ├── WALKTHROUGH.md          Product and code walkthrough
-│   ├── DEPLOYMENT.md           Step-by-step hosting and submission guide
-│   └── VIDEO_SCRIPT.md         Timed two-part script for the demo video
 ├── backend/
 │   ├── Dockerfile              Python 3.12 slim, non-root, snapshot baked in
 │   ├── Procfile, runtime.txt   Heroku deployment
